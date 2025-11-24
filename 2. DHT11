@@ -1,0 +1,70 @@
+/* DHT11 : 
+
+   Goal: Display the temperature and humidity values on the LCD. 
+
+   Main theme: Reading a temperature and humidity sensor and showing the results on an LCD screen. 
+
+*/ 
+
+#include <LiquidCrystal.h>   // Library for using the LCD screen 
+
+#include "DHT.h"  // Library for using the DHT11 sensor 
+
+// LCD pin connections (RS, EN, D4, D5, D6, D7) 
+
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2; 
+
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);   // Create an LCD object using those pins 
+
+// DHT11 setup 
+
+#define DHTPIN 8  // The DHT11 data pin is connected to digital pin 8 
+
+#define DHTTYPE DHT11   // Tell the library we are using the DHT11 model 
+
+float hum;    // Variable to store humidity reading 
+
+float temp;  // Variable to store temperature reading 
+
+DHT dht(DHTPIN, DHTTYPE);  // Create a DHT object using pin 8 and DHT11 type 
+
+ 
+
+void setup() { 
+
+  lcd.begin(16, 2);   // Start the LCD with 16 columns and 2 rows 
+
+  dht.begin();  // Start the DHT11 sensor 
+
+} 
+
+void loop() { 
+
+  delay(200);  // Small delay to avoid reading too fast 
+
+  hum = dht.readHumidity();  // Read humidity from DHT11 and store it in hum 
+
+  temp = dht.readTemperature(); // Read temperature from DHT11 and store it in temp 
+
+  lcd.clear();   // Clear the LCD screen before writing new text 
+
+  lcd.setCursor(0, 0); // Move the cursor to column 0, row 0 
+
+  lcd.print("Temp = "); // Print a label for temperature 
+
+  lcd.print(temp);  // Print the temperature value 
+
+  lcd.print(" C");  // Print the unit (Celsius) 
+
+  lcd.setCursor(0, 1);   // Move the cursor to column 0, row 1 
+
+  lcd.print("Humid = ");    // Print a label for humidity 
+
+  lcd.print(hum);   // Print the humidity value 
+
+  lcd.print(" %");   // Print the percent sign 
+
+} 
+
+ 
+ 
