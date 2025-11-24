@@ -1,0 +1,90 @@
+ 
+
+/* Stepper Motor Joystick control 
+
+Goal: Using a joystick to control a stepper motor 
+
+Main Theme: analog input  
+
+*/ 
+
+#include <Stepper.h> // include library for stepper motor 
+
+const int STEPS_PER_REV = 32 // steps per motor revolution 
+
+const int GEAR_RATIO = 64 // motor gear ratio 
+
+const int TOTAL_STEPS = STEPS_PER_REV * GEAR_RATIO // total shaft steps 
+
+// create stepper object and set pins 
+
+Stepper motor(STEPS_PER_REV, 8, 10, 9, 11) 
+
+const int joyX = A1 // joystick X axis for direction 
+
+const int joyY = A0 // joystick Y axis for speed 
+
+unsigned long previousMillis = 0 // stores last time step was moved 
+
+const int stepInterval = 10 // interval between steps in ms 
+
+void setup() { 
+
+  Serial.begin(9600) // start serial monitor 
+
+} 
+
+void loop() { 
+
+  unsigned long currentMillis = millis() // get current time 
+
+  int xVal = analogRead(joyX) // read X axis value 
+
+  int yVal = analogRead(joyY) // read Y axis value 
+
+  int direction = 0 // default direction stop 
+
+  if (xVal < 450) direction = -1 // if X is low move CCW 
+
+  else if (xVal > 450) direction = 1 // if X is high move CW 
+
+  // map Y axis to motor speed 
+
+  int speed = map(yVal, 0, 1023, 600, 0) // smaller value faster 
+
+  // move stepper if interval passed 
+
+  if (currentMillis - previousMillis >= stepInterval) { 
+
+    previousMillis = currentMillis 
+
+    if (direction != 0) { 
+
+      motor.setSpeed(speed) // set motor speed 
+
+      motor.step(direction) // move one step 
+
+    } 
+
+  } 
+
+  // print values to serial monitor 
+
+  Serial.print("X ") Serial.print(xVal) 
+
+  Serial.print(" Y ") Serial.print(yVal) 
+
+  Serial.print(" Speed ") Serial.print(speed) 
+
+  Serial.print(" Direction ")  
+
+  if (direction == 1) Serial.println("CW") 
+
+  else if (direction == -1) Serial.println("CCW") 
+
+  else Serial.println("STOP") 
+
+} 
+
+ 
+ 
