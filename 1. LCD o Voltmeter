@@ -1,0 +1,74 @@
+/*  
+
+  The goal of this program is to read a voltage from analog pin A0, convert the 
+
+  reading into a voltage, and display that voltage on an LCD 
+
+  screen. 
+
+  The main theme is: Analog Input + LCD Display  
+
+*/ 
+
+#include <LiquidCrystal.h> 
+
+ 
+ 
+
+// initialize the library by associating any needed LCD interface pin 
+
+// with the arduino pin number it is connected to 
+
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2; 
+
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7); 
+
+ 
+ 
+
+void setup() { 
+
+  // set up the LCD's number of columns and rows: 
+
+  lcd.begin(16, 2); 
+
+  // Print a message to the LCD. 
+
+  lcd.print("Voltage = "); 
+
+  Serial.begin(9600);  
+
+} 
+
+ 
+ 
+
+void loop() { 
+
+  // set the cursor to column 0, line 1 
+
+  // (note: line 1 is the second row, since counting begins with 0): 
+
+  lcd.setCursor(10, 0); 
+
+  // read the input on analog pin 0:  
+
+  int sensorValue = analogRead(A0);  
+
+  // You have to pull a valuable to any value that you want to read.   
+
+  // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):  
+
+  float voltage = sensorValue * (5.0 / 1023.0);  
+
+  //Floating point numbers are not exact, and may yield strange results when compared. For example 9.0 / 0.3 may not quite equal 30.0. You should instead check that the absolute value of the difference between the numbers is less than some small number.  
+
+  // When using float, you always need a decimal.  
+
+  // print out the value you read:  
+
+  lcd.print (voltage);  
+
+} 
+
+ 
