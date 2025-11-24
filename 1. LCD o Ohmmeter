@@ -1,0 +1,93 @@
+/*  
+
+  The goal of this program is to measure an unknown resistance using a voltage  
+
+  divider, calculate the resistance value using Ohm’s Law and display the  
+
+  result on a LCD screen. 
+
+  The main theme is: Analog Input + LCD Display 
+
+*/ 
+
+// extra display libraries (included but not used in this sketch) 
+
+#include <Wire.h>  
+
+#include <Adafruit_GFX.h>  
+
+#include <Adafruit_SSD1306.h>  
+
+#include <Adafruit_I2CDevice.h>  
+
+// create an unused display object (not required for this lab) 
+
+Adafruit_SSD1306 display(128, 64, &Wire, -1);  
+
+// include the LiquidCrystal library to control the 16x2 LCD 
+
+#include <LiquidCrystal.h>  
+
+// define the LCD pins connected to the Arduino 
+
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2; 
+
+// create the LCD object 
+
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);  
+
+void setup() { 
+
+  // start the LCD with 16 columns and 2 rows 
+
+  lcd.begin(16, 2); 
+
+  // print the label "Resistance =" on the first row 
+
+  lcd.print("Resistance = "); 
+
+  // start the serial monitor 
+
+  Serial.begin(9600);   
+
+} 
+
+void loop() { 
+
+  // set the cursor at column 0 of the second row 
+
+  lcd.setCursor(0, 1); 
+
+  // read the analog value from A0 (0–1023) 
+
+  int sensorValue = analogRead(A0);   
+
+  // convert the reading into voltage across the unknown resistor 
+
+  float VA = sensorValue * (5.0 / 1023.0);   
+
+  // calculate the current using a known resistor of 10.01kΩ 
+
+  float I = ( (5.0 - VA) / 10010.0 );   
+
+  // compute the unknown resistance using R = V / I 
+
+  float R = ( VA / I );   
+
+  // print the calculated resistance on the LCD 
+
+  lcd.print(R);  
+
+  // print a special symbol after the number (ohm sign substitute) 
+
+  lcd.setCursor(6, 1);  
+
+  lcd.print((char)0b11110100);  
+
+  // also print the resistance to the serial monitor 
+
+  Serial.println(R);  
+
+} 
+
+ 
