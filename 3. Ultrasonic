@@ -1,0 +1,154 @@
+/*  
+
+GOAL: Measure the distance using an ultrasonic sensor and display the distance on a LCD screen. 
+
+MAIN THEME: Reading sensor data, converting it, and showing the results on an LCD. 
+
+*/ 
+
+ 
+
+#include <LiquidCrystal.h> 
+
+ 
+
+// initialize the library by associating any needed LCD interface pin 
+
+// with the arduino pin number it is connected to 
+
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2; 
+
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7); 
+
+#define trigPin 10 
+
+#define echoPin 13 
+
+float duration, distance; 
+
+ 
+
+void setup() { 
+
+  // set up the LCD's number of columns and rows: 
+
+  lcd.begin(16, 2); 
+
+  // Print a message to the LCD. 
+
+ Serial.begin(9600); 
+
+ pinMode(trigPin, OUTPUT); 
+
+ pinMode(echoPin,INPUT); 
+
+} 
+ 
+
+void loop() { 
+
+ 
+
+//write a pulse to the HC-SR04 Trigger Pin  
+
+digitalWrite(trigPin, LOW); 
+
+delayMicroseconds(2); 
+
+digitalWrite(trigPin, HIGH); 
+
+delayMicroseconds(10); 
+
+digitalWrite(trigPin, LOW); 
+
+ 
+
+// Measure the response from the HC-SR04 Echo Pin 
+
+duration = pulseIn(echoPin,HIGH); 
+
+// Determine distance from duration 
+
+// Use 343 metres per second as speed of sound 
+
+distance = (duration/2) * 0.0343; 
+
+ // set the cursor to column 0, line 1 
+
+ 
+
+// Send results to Serial Monitor 
+
+Serial.print("Distance = "); 
+
+ lcd.setCursor(0, 0); 
+
+  // print the number of seconds since reset: 
+
+  lcd.print("Distance =  "); 
+
+if (distance >= 400 || distance <= 2) { 
+
+  Serial.println("Out of range"); 
+
+ 
+
+    // (note: line 1 is the second row, since counting begins with 0): 
+
+  lcd.setCursor(0, 1); 
+
+  // print the number of seconds since reset: 
+
+  lcd.print("Out of range"); 
+
+ 
+ 
+ 
+ 
+
+} 
+
+else { 
+
+ 
+
+  lcd.clear(); 
+
+   lcd.setCursor(0, 0); 
+
+  // print the number of seconds since reset: 
+
+  lcd.print("Distance =  "); 
+
+  Serial.print(distance); 
+
+  Serial.println(" cm"); 
+
+  delay(500); 
+
+ 
+
+    lcd.setCursor(0, 1); 
+
+  // print the number of seconds since reset: 
+
+  lcd.print(distance); 
+
+  lcd.setCursor(5, 1); 
+
+  lcd.print("cm"); 
+
+} 
+
+ 
+
+delay(500); 
+
+ 
+
+} 
+
+   
+
+ 
+ 
